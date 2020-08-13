@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <!--当前logger上下文名称-->
+    <contextName>logbackStudy</contextName>
+
+    <!--当前日期-->
+    <timestamp key="nowDate" datePattern="yyyyMMdd" />
+
+    <!--输出到控制台-->
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%date %level %c : %M [line on %L] %msg %n</pattern>
+        </encoder>
+    </appender>
+
+    <!--输出到文件-->
+    <appender name="FILE" class="ch.qos.logback.core.FileAppender">
+        <file>logbackstudy_${nowDate}.log</file>
+
+        <!--日志滚动的策略，按时间归档，实现了RollingPolicy和TriggeringPolicy接口，RollingPolicy指历史文件归档策略，TriggeringPolicy指历史文件归档时机-->
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>logbackStudy_%d{yyyyMMdd}.log.gz</fileNamePattern>
+            <!--最多保存30天历史-->
+            <maxHistory>30</maxHistory>
+            <!--日志文件合起来最大1G，超出后会删除旧日志-->
+            <totalSizeCap>1G</totalSizeCap>
+        </rollingPolicy>
+        <encoder>
+            <!--日志模板：日期时间- 日志级别- logger所在的类- 方法- 行号- 信息- 换行-->
+            <pattern>%date %level %logger : %M [line on %L] %msg %n</pattern>
+        </encoder>
+    </appender>
+
+    <!--控制指定包或类的日志输出（包括等级和目的地）, additivity表示日志信息是否向上传递，false为不传递（即不重复打印）-->
+    <logger name="com.dragon.study.log.Slf4jAndLogbackMainTwo" level="warn" additivity="false">
+        <!--可多个appender-->
+        <appender-ref ref="STDOUT" />
+    </logger>
+
+    <root level="info">
+        <appender-ref ref="STDOUT" />
+        <appender-ref ref="FILE" />
+    </root>
+</configuration>
